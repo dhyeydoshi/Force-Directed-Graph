@@ -1,9 +1,9 @@
 'use strict';
 d3.json("assign_part2_dhyey.json").then(function (data){
     let svg = d3.select('body').append("svg").attr("viewBox","-800 -900 3200 3200")
-    console.log(data)
-    simulate(data,svg) // main function to make network
+    simulate(data,svg)
 })
+
 function simulate(data,svg)
 {
     const width = 1400
@@ -11,8 +11,7 @@ function simulate(data,svg)
     const main_group = svg.append("g")
         .attr("transform", "translate(-530, 160) scale(1.6)")
 
-    //calculate degree of the nodes:
-    let node_degree={}; //initiate an object
+    let node_degree={};
     d3.map(data.links, (d)=>{
         if(d.source in node_degree)
         {
@@ -35,9 +34,8 @@ function simulate(data,svg)
         .range([5,10])
 
     let color=d3.scaleSequential()
-        .domain([2000,2020])
-        //.interpolator(d3.interpolateViridis);
-        .interpolator(d3.interpolateRgbBasis(["green","yellow","white"]))
+        .domain([1990,2020])
+        .interpolator(d3.interpolateRgbBasis(["blue","yellow","purple"]))
 
     let link_elements = main_group.append("g")
         .attr('transform',`translate(${width/2},${height/2})`)
@@ -47,11 +45,11 @@ function simulate(data,svg)
         .append("line")
 
     const treatPublisherClass=(Publisher)=>{
-        let temp=Publisher.toString().split(' ').join('');
-        temp= temp.split(".").join('');
-        temp= temp.split(",").join('');
-        temp= temp.split("/").join('');
-        return "gr"+temp
+        let year=Publisher.toString().split(' ').join('');
+        year= year.split(".").join('');
+        year= year.split(",").join('');
+        year= year.split("/").join('');
+        return "yr-"+year
     }
 
     let node_elements = main_group.append("g")
@@ -66,7 +64,7 @@ function simulate(data,svg)
 
 
     node_elements.append("circle")
-        .attr("r", function(d, i){
+        .attr("r", function(d){
             if(node_degree[d.id]!==undefined){
                 return scale_radius(node_degree[d.id])
             }
@@ -74,12 +72,13 @@ function simulate(data,svg)
                 return scale_radius(0)
             }
         }).attr("fill",d=>color(d.Year))
-    let label = node_elements.append("text")
+
+    node_elements.append("text")
         .text(function(d) {  return `${d.Title}  (${d.Year})`; });
 
     let ForceSimulation=d3.forceSimulation(data.nodes)
         .force("collide",
-            d3.forceCollide().radius(function (d,i){
+            d3.forceCollide().radius(function (d){
                 return scale_radius(node_degree[d.id])*1.2
             })
         )
@@ -92,8 +91,6 @@ function simulate(data,svg)
             })
         )
         .on("tick", ticked);
-
-
 
     function ticked()
     {
