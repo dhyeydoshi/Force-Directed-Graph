@@ -6,6 +6,6 @@ A force-directed graph, also known as a spring-embedder graph layout, is a metho
 
 The force-directed graph layout is based on a physical simulation where the nodes of the graph are represented as particles that interact with each other through attractive and repulsive forces. The layout algorithm iteratively adjusts the positions of the nodes based on these forces until an equilibrium state is reached.
 
-![img.png](img.png)
+![img.png](Screenshot.png)
 
 Page Link: https://dhyeydoshi.github.io/Force-Directed-Graph/network.html
